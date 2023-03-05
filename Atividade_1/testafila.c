@@ -123,7 +123,7 @@ int main (int argc, char **argv, char **envp)
    fila0 = NULL ;
    for (i=0; i<N; i++)
    {
-      assert (queue_size ((queue_t*) fila0) == i) ;
+      assert (queue_size ((queue_t*) fila0) == i) ;      
       queue_append ((queue_t **) &fila0, (queue_t*) &item[i]) ;
       assert (fila_correta (fila0)) ;
    }
@@ -153,10 +153,13 @@ int main (int argc, char **argv, char **envp)
    i=0 ;
    while (i<N)
    {
-      aux = fila0 ;
+      aux = fila0 ;      
+      printf("%d quantidade: %d\n", i, queue_size ((queue_t*) fila0));
       queue_remove ((queue_t**) &fila0, (queue_t*) aux) ;
       assert (fila_correta (fila0)) ;  // estrutura continua correta
       assert (aux->id == i) ;            // testa ordem do elemento removido
+
+      printf("%p asdf\n",aux->prev);
       assert (aux->prev == NULL) ;       // testa elemento removido
       assert (aux->next == NULL) ;       // testa elemento removido
       i++ ;

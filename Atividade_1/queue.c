@@ -1,4 +1,5 @@
 #include "queue.h"
+#include <windows.h>
 
 // Conta o numero de elementos na fila
 // Retorno: numero de elementos na fila
@@ -53,7 +54,42 @@ void queue_print (char *name, queue_t *queue, void print_elem (void*) )
 // - o elemento nao deve estar em outra fila
 // Retorno: 0 se sucesso, <0 se ocorreu algum erro
 
-int queue_append (queue_t **queue, queue_t *elem) ;
+int queue_append (queue_t **queue, queue_t *elem) 
+{
+    if (*queue == NULL )
+    {
+        elem->next = elem;
+        elem->prev = elem;
+        *queue = elem;
+        return 0;
+    }
+    if (elem == NULL)
+    {
+        return -1;
+    }
+    if (*queue == elem)
+    {
+        return -1;
+    }
+    queue_t *proximoElemento = (*queue)->next;
+    while(1 == 1)
+    {
+        if(elem == proximoElemento)
+            return 1;
+
+        if(proximoElemento == (*queue))
+            break;
+
+        proximoElemento = proximoElemento->next;            
+    }
+
+    elem->next = *queue;
+    (*queue)->prev->next = elem;
+    elem->prev = (*queue)->prev;
+    (*queue)->prev = elem;
+    
+    return 0;
+}
 
 //------------------------------------------------------------------------------
 // Remove o elemento indicado da fila, sem o destruir.
@@ -64,4 +100,52 @@ int queue_append (queue_t **queue, queue_t *elem) ;
 // - o elemento deve pertencer a fila indicada
 // Retorno: 0 se sucesso, <0 se ocorreu algum erro
 
-int queue_remove (queue_t **queue, queue_t *elem) ;
+int queue_remove (queue_t **queue, queue_t *elem) 
+{
+    if (*queue == NULL || elem == NULL || queue_size(*queue) == 0)
+    {
+        printf("alguma coisa pelo amor de deus");
+        return 1;
+    }
+
+    queue_t *proximoElemento = (*queue)->next;
+    int contador = 0;
+    while(1 == 1)
+    {
+        printf("----------------%d\n", contador);
+        contador++;
+
+        if(elem == proximoElemento)
+        {
+            printf("Funfa\n");
+            break; 
+        }
+        
+        
+        if(proximoElemento == (*queue))
+        {
+            
+            return 1;        
+        }
+            
+        proximoElemento = proximoElemento->next;            
+    }
+
+    queue_t *elemAnterior = elem->prev;
+    queue_t *elemProximo = elem->next;
+
+    elemAnterior->next = elemProximo;
+    elemProximo->prev = elemAnterior;
+
+    elem->next = NULL;
+    elem->prev = NULL;
+
+    free(elem);
+    elem = NULL;
+    // elem->prev = NULL;
+
+    // free(elem->next);
+    // elem->next = NULL;
+
+    return 0;
+}
